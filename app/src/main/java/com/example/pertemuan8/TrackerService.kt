@@ -149,6 +149,7 @@ class TrackerService : Service(), SensorEventListener {
         return null
     }
 
-
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+    }
 }
 

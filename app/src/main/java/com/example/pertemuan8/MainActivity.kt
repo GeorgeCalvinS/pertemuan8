@@ -7,6 +7,8 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.provider.CalendarContract
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -19,6 +21,8 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val ACTION_SERVICE_STOPPED_JUMP = "com.example.pertemuan8.ACTION_SERVICE_STOPPED_JUMP"
+        const val ACTION_EXERCISE_DONE = "com.example.pertemuan8.ACTION_EXERCISE_DONE"
+        const val EXTRA_JUMP_COUNT = "extra_jump_count"
         const val REQUEST_CODE_PERMISSIONS = 101
     }
 
@@ -107,9 +111,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             if (allPermissionsGranted) {
-                val serviceIntent = Intent(this, TrackerService::class.java)
-                ContextCompat.startForegroundService(this, serviceIntent)
-                finish()
+                statusTextView.text = "Izin diberikan. Silakan tekan tombol lagi."
             } else {
                 statusTextView.text = "Izin ditolak, service tidak dapat dijalankan."
             }
@@ -117,8 +119,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleIntent(intent: Intent?) {
-        if (intent?.action == ACTION_SERVICE_STOPPED_JUMP) {
-            statusTextView.text = "Background services sudah berhenti karena Anda melompat"
+        when (intent?.action) {
+            ACTION_SERVICE_STOPPED_JUMP -> {
+                statusTextView.text = "Background services sudah berhenti karena Anda melompat"
+            }
+            ACTION_EXERCISE_DONE -> {
+                val jumpCount = intent.getIntExtra(EXTRA_JUMP_COUNT, 0)
+                statusTextView.text = "Latihan selesai!\nJumlah Lompatan: $jumpCount\nMembuat event di Calendar..."
+                createCalendarEvent(jumpCount)
+            }
+        }
+    }
+
+    private fun createCalendarEvent(jumpCount: Int) {
+        val calendarIntent = Intent(Intent.ACTION_INSERT).apply {
+            data = CalendarContract.Events.CONTENT_URI
+            putExtra(CalendarContract.Events.TITLE, "Latihan Hari Ini")
+            putExtra(CalendarContract.Events.DESCRIPTION, "Selesai latihan dengan $jumpCount lompatan.")
+            putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, System.currentTimeMillis())
+            putExtra(CalendarContract.EXTRA_EVENT_END_TIME, System.currentTimeMillis() + (60 * 60 * 1000))
+        }
+        try {
+            startActivity(calendarIntent)
+        } catch (e: Exception) {
+            Log.e("MainActivity", "Gagal membuka aplikasi Calendar: ${e.message}")
         }
     }
 

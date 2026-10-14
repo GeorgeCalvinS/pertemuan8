@@ -145,5 +145,10 @@ class TrackerService : Service(), SensorEventListener {
         Log.d("TrackerService", "Service onDestroy")
     }
 
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
+    }
+
+
 }
 

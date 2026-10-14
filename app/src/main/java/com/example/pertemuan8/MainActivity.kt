@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var statusTextView: TextView
     private lateinit var btnStart: Button
+    private lateinit var btnLatihan: Button
 
     companion object {
         const val ACTION_SERVICE_STOPPED_JUMP = "com.example.pertemuan8.ACTION_SERVICE_STOPPED_JUMP"
@@ -42,12 +43,25 @@ class MainActivity : AppCompatActivity() {
 
         statusTextView = findViewById(R.id.statusTextView)
         btnStart = findViewById(R.id.btnStart)
+        btnLatihan = findViewById(R.id.btnLatihan)
 
         handleIntent(intent)
 
         btnStart.setOnClickListener {
             if (hasAllPermissions()) {
                 startTrackerService()
+            } else {
+                ActivityCompat.requestPermissions(
+                    this,
+                    permissionsToRequest,
+                    REQUEST_CODE_PERMISSIONS
+                )
+            }
+        }
+
+        btnLatihan.setOnClickListener {
+            if (hasAllPermissions()) {
+                startExerciseService()
             } else {
                 ActivityCompat.requestPermissions(
                     this,
@@ -68,6 +82,14 @@ class MainActivity : AppCompatActivity() {
         val serviceIntent = Intent(this, TrackerService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
         statusTextView.text = "Background service sedang berjalan..."
+    }
+
+    private fun startExerciseService() {
+        val serviceIntent = Intent(this, TrackerService::class.java).apply {
+            putExtra(TrackerService.EXTRA_MODE, TrackerService.MODE_EXERCISE)
+        }
+        ContextCompat.startForegroundService(this, serviceIntent)
+        statusTextView.text = "Latihan dimulai...\nBerjalan dan melompat untuk latihan!"
     }
 
     override fun onRequestPermissionsResult(

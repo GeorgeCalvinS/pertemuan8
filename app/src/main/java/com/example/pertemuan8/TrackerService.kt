@@ -27,6 +27,14 @@ class TrackerService : Service(), SensorEventListener {
     private val NOTIFICATION_ID_SERVICE_RUNNING = 1
     private val NOTIFICATION_ID_JUMP_DETECTED = 2
 
+    private var currentMode = MODE_NORMAL
+
+    companion object {
+        const val EXTRA_MODE = "extra_mode"
+        const val MODE_NORMAL = 0
+        const val MODE_EXERCISE = 1
+    }
+
     override fun onCreate() {
         super.onCreate()
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -37,6 +45,7 @@ class TrackerService : Service(), SensorEventListener {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("TrackerService", "Service onStartCommand")
+        currentMode = intent?.getIntExtra(EXTRA_MODE, MODE_NORMAL) ?: MODE_NORMAL
         startForeground(
             NOTIFICATION_ID_SERVICE_RUNNING,
             buildServiceRunningNotification()

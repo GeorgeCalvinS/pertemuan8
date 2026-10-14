@@ -9,9 +9,9 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/statusTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:id="@+id/statusTextView"
         android:text="Tekan Tombol untuk memulai pelacakan.\nService akan berhenti saat Anda Melompat"
         android:textAlignment="center"
         android:textSize="16sp"
@@ -22,14 +22,25 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
-        android:id="@+id/btnStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/btnStart"
         android:layout_marginTop="24dp"
         android:text="Mulai Lacak Aktivitas"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnLatihan"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/statusTextView" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnLatihan"
+        android:layout_marginTop="16dp"
+        android:text="Mulai Latihan"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnStart" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

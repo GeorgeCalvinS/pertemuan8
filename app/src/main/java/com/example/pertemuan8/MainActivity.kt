@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import android.provider.CalendarContract
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -125,7 +126,8 @@ class MainActivity : AppCompatActivity() {
             }
             ACTION_EXERCISE_DONE -> {
                 val jumpCount = intent.getIntExtra(EXTRA_JUMP_COUNT, 0)
-                statusTextView.text = "Latihan selesai!\nJumlah Lompatan: $jumpCount\nMembuat event di Calendar..."
+                statusTextView.text = "Latihan Selesai!\nJumlah Lompatan: $jumpCount\nMembuat event latihan di Calendar..."
+                Toast.makeText(this, "Latihan selesai! Lompatan: $jumpCount", Toast.LENGTH_LONG).show()
                 createCalendarEvent(jumpCount)
             }
         }
@@ -143,6 +145,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(calendarIntent)
         } catch (e: Exception) {
             Log.e("MainActivity", "Gagal membuka aplikasi Calendar: ${e.message}")
+            Toast.makeText(this, "Aplikasi Calendar tidak tersedia", Toast.LENGTH_SHORT).show()
         }
     }
 
